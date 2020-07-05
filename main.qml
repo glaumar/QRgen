@@ -11,7 +11,6 @@ ApplicationWindow {
     // TODO:
     // - export
     // - import
-    // - correction level select
     // - limit input length
     Column {
         width: Math.max(300, parent.width * 0.9)
@@ -24,7 +23,8 @@ ApplicationWindow {
             width: height
             height: parent.height - 150
             anchors.horizontalCenter: parent.horizontalCenter
-            source: "image://QZXing/encode/" + inputField.text
+            source: "image://QZXing/encode/" + inputField.text + "?correctionLevel="
+                    + correctionLevel.currentText + "&format=qrcode"
             sourceSize.width: 960
             sourceSize.height: 960
         }
@@ -44,8 +44,9 @@ ApplicationWindow {
             }
 
             ComboBox {
-                model: ["L Level", "M Level", "Q Level", "H Level"]
-                Layout.fillWidth: true
+                id: correctionLevel
+                displayText: "Level: " + currentText
+                model: ["H", "Q", "M", "L"]
             }
         }
 
