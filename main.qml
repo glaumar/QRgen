@@ -1,5 +1,6 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
+import QtQuick.Layouts 1.15
 
 ApplicationWindow {
     visible: true
@@ -7,18 +8,51 @@ ApplicationWindow {
     height: 800
     title: qsTr("QRgen")
 
+    // TODO:
+    // - export
+    // - import
+    // - correction level select
+    // - limit input length
     Column {
+        width: Math.max(300, parent.width * 0.9)
+        height: Math.max(300, parent.height * 0.9)
+
         anchors.centerIn: parent
         spacing: 20
-        Image{
+        Image {
+            id: qrImg
+            width: height
+            height: parent.height - 150
+            anchors.horizontalCenter: parent.horizontalCenter
             source: "image://QZXing/encode/" + inputField.text
-            sourceSize.width: 500
-            sourceSize.height: 500
+            sourceSize.width: 960
+            sourceSize.height: 960
+        }
+
+        RowLayout {
+            width: qrImg.width
+            anchors.horizontalCenter: parent.horizontalCenter
+
+            spacing: 10
+            Button {
+                text: "Import"
+                Layout.fillWidth: true
+            }
+            Button {
+                text: "Export"
+                Layout.fillWidth: true
+            }
+
+            ComboBox {
+                model: ["L Level", "M Level", "Q Level", "H Level"]
+                Layout.fillWidth: true
+            }
         }
 
         ScrollView {
-            width: 500
-            height: 200
+            width: qrImg.width
+            anchors.horizontalCenter: parent.horizontalCenter
+            height: 100
             TextArea {
                 id: inputField
                 implicitHeight: parent.height
@@ -39,6 +73,4 @@ ApplicationWindow {
             }
         }
     }
-
-
 }
