@@ -1,13 +1,14 @@
 #include <QZXing.h>
+#include <imagesaver.h>
 
-#include <QDebug>
-#include <QGuiApplication>
+#include <QApplication>
 #include <QQmlApplicationEngine>
+#include <QQmlContext>
 
 int main(int argc, char *argv[]) {
-    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
-    QGuiApplication app(argc, argv);
+    QApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
 
@@ -23,6 +24,9 @@ int main(int argc, char *argv[]) {
     QZXing::registerQMLTypes();
     QZXing::registerQMLImageProvider(engine);
 
+    engine.rootContext()->setContextProperty("imageSaver", new ImageSaver);
+
     engine.load(url);
+
     return app.exec();
 }

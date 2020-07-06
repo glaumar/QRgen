@@ -1,6 +1,7 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
+import Qt.labs.platform 1.1
 
 ApplicationWindow {
     visible: true
@@ -8,8 +9,18 @@ ApplicationWindow {
     height: 800
     title: qsTr("QRgen")
 
+    function urlToPath(urlString) {
+        var s
+        if (urlString.startsWith("file:///")) {
+            var k = urlString.charAt(9) === ':' ? 8 : 7
+            s = urlString.substring(k)
+        } else {
+            s = urlString
+        }
+        return decodeURIComponent(s)
+    }
+
     // TODO:
-    // - export
     // - import
     // - limit input length
     Column {
@@ -32,15 +43,34 @@ ApplicationWindow {
         RowLayout {
             width: qrImg.width
             anchors.horizontalCenter: parent.horizontalCenter
-
             spacing: 10
+
             Button {
                 text: "Import"
                 Layout.fillWidth: true
             }
+
             Button {
                 text: "Export"
                 Layout.fillWidth: true
+
+                FileDialog {
+                    id: saveFileDialog
+                    defaultSuffix: ".png"
+                    folder: StandardPaths.writableLocation(
+                                StandardPaths.PicturesLocation)
+                    fileMode: FileDialog.SaveFile
+                    onAccepted: {
+                        imageSaver.qrSave(inputField.text,
+                                          correctionLevel.currentText,
+                                          urlToPath(
+                                              saveFileDialog.file.toString()))
+                    }
+                }
+
+                onClicked: {
+                    saveFileDialog.open()
+                }
             }
 
             ComboBox {
