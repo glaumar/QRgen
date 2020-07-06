@@ -9,19 +9,7 @@ ApplicationWindow {
     height: 800
     title: qsTr("QRgen")
 
-    function urlToPath(urlString) {
-        var s
-        if (urlString.startsWith("file:///")) {
-            var k = urlString.charAt(9) === ':' ? 8 : 7
-            s = urlString.substring(k)
-        } else {
-            s = urlString
-        }
-        return decodeURIComponent(s)
-    }
-
     // TODO:
-    // - import
     // - limit input length
     Column {
         width: Math.max(300, parent.width * 0.9)
@@ -48,6 +36,22 @@ ApplicationWindow {
             Button {
                 text: "Import"
                 Layout.fillWidth: true
+                FileDialog {
+                    id: openFileDialog
+                    folder: StandardPaths.writableLocation(
+                                StandardPaths.PicturesLocation)
+                    fileMode: FileDialog.OpenFile
+                    nameFilters: ["Image files (*.png *.jpg *.jpeg)"]
+                    onAccepted: {
+                        let data = qrImageHandler.decodeQrImg(
+                                openFileDialog.file)
+                        inputField.text = data
+                    }
+                }
+
+                onClicked: {
+                    openFileDialog.open()
+                }
             }
 
             Button {
@@ -61,10 +65,9 @@ ApplicationWindow {
                                 StandardPaths.PicturesLocation)
                     fileMode: FileDialog.SaveFile
                     onAccepted: {
-                        imageSaver.qrSave(inputField.text,
-                                          correctionLevel.currentText,
-                                          urlToPath(
-                                              saveFileDialog.file.toString()))
+                        qrImageHandler.imageGen(inputField.text,
+                                                correctionLevel.currentText,
+                                                saveFileDialog.file)
                     }
                 }
 

@@ -1,5 +1,5 @@
 #include <QZXing.h>
-#include <imagesaver.h>
+#include <QrImageHandler.h>
 
 #include <QApplication>
 #include <QQmlApplicationEngine>
@@ -24,7 +24,8 @@ int main(int argc, char *argv[]) {
     QZXing::registerQMLTypes();
     QZXing::registerQMLImageProvider(engine);
 
-    engine.rootContext()->setContextProperty("imageSaver", new ImageSaver);
+    engine.rootContext()->setContextProperty("qrImageHandler",
+                                             new QrImageHandler);
 
     engine.load(url);
 
