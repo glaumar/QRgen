@@ -9,8 +9,6 @@ ApplicationWindow {
     height: 800
     title: qsTr("QRgen")
 
-    // TODO:
-    // - limit input length
     Column {
         width: Math.max(300, parent.width * 0.9)
         height: Math.max(300, parent.height * 0.9)
